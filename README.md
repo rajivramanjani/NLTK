@@ -1,6 +1,6 @@
 # NLTK
 Steps involved in implementing NLTK
-##Step 1: Importing necessary libraries
+## Step 1: Importing necessary libraries
 import re
 import nltk
 nltk.download("all")
@@ -9,27 +9,27 @@ from nltk.stem.porter import PorterStemmer
 
 In the above re package is for data cleaning and review.  Nltk is the main package.  
 
-##Step 2: Cleaning and reviewing data
+## Step 2: Cleaning and reviewing data
 Suppose you have a dataset full of 1000 rows then this is how you go about it:
 
 corpus = []
 for i in range(0, 1000):
-    ###What the next line does is take in the 'Review' column of our input dataset ds and only retain chars from a to z and A to Z
-    ###All other characters that are removed get replaced with a space
+    ### What the next line does is take in the 'Review' column of our input dataset ds and only retain chars from a to z and A to Z
+    ### All other characters that are removed get replaced with a space
     review = re.sub('[^a-zA-Z]', ' ', ds['Review'][i])
-    ###What the next line will do is to change all upper case characters to lower case
+    ### What the next line will do is to change all upper case characters to lower case
     review = review.lower()
-    ###What the next line would do is to convert each sentence into a list of its composite words
+    ### What the next line would do is to convert each sentence into a list of its composite words
     review = review.split()
     ps = PorterStemmer()
     review = [ps.stem(word) for word in review if not word in set(stopwords.words('english'))]
-    ###The next line would remove words that are stopwords like 'this', 'is' etc. that are in English.  It also does the 
-    ###stemming process - which changes words to their root word.  Like loved would be changed to love etc.
-    ###review = [ps.stem(word) for word in review if not word in set('english')]
-    ###In the next line all the words in each row are joint together into a single phrase/string with a space seperating individual
-    ###words
+    ### The next line would remove words that are stopwords like 'this', 'is' etc. that are in English.  It also does the 
+    ### stemming process - which changes words to their root word.  Like loved would be changed to love etc.
+    ### review = [ps.stem(word) for word in review if not word in set('english')]
+    ### In the next line all the words in each row are joint together into a single phrase/string with a space seperating individual
+    ### words
     review = ' '.join(review)
-    ###In the next line all lines of the input are appended to an empty corpus after the above cleaning process is done
+    ### In the next line all lines of the input are appended to an empty corpus after the above cleaning process is done
     corpus.append(review)
 
 
@@ -44,7 +44,7 @@ Then you apply stopwords to remove all the general article words like is, if, to
 Next you join all the words of each row into a sentence separated by a space
 Next you populate the corpus list sentence by sentence
 
-##Step 3 : Create a Bag of Words
+## Step 3 : Create a Bag of Words
 ### Creating the Bag of Words model
 ### A bag of words is a table matrix where each review corresponds to a row and each column corresponds to a unique word across all 
 ### reviews together.  The cells will have a number which corresponds to the number of times a word appears  in that particular
@@ -71,22 +71,22 @@ Above code in this manner:
 ### code like this
 cv = CountVectorizer(max_features = 1500)
 X = cv.fit_transform(corpus).toarray()
-###Now in the above step - X becomes the list of features or the independent variables
-###So here below we go back and check the values of the original dataset.  
+### Now in the above step - X becomes the list of features or the independent variables
+### So here below we go back and check the values of the original dataset.  
 ds.values
 
 ### In the next step we would be interested only in the second column i.e. wether a review is positive or not.  This is the label
 ### or the dependent variable
 y = ds.iloc[:, 1].values
 
-##Step 4: Prepare the data for training
+## Step 4: Prepare the data for training
 ### Splitting the dataset into the Training set and Test set
 from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.20, random_state = 0)
 
 
-##Step 5: Do the actual training
-###The three most common algos used for NLP are Naive Bayes, Decision Tree Classification and Random Forest Classification. 
+## Step 5: Do the actual training
+### The three most common algos used for NLP are Naive Bayes, Decision Tree Classification and Random Forest Classification. 
 ### CART, C5.0, Maximum Entropy:  CART or Classification And Regression Trees are a broad category of models., not one specific 
 ### model. Also C5.0 is a methodology used in applying Decision trees, and is one of the most common approaches. 
 ### Maximum Entropy is a method that multiple models use to establish decision trees and model learning. 
@@ -98,7 +98,7 @@ classifier.fit(X_train, y_train)
 ### Predicting the Test set results
 y_pred = classifier.predict(X_test)
 
-##Step 6: Measure the metrics
+## Step 6: Measure the metrics
 ### Making the Confusion Matrix
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
